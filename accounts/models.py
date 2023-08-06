@@ -41,7 +41,7 @@ class User(AbstractBaseUser,PermissionsMixin):
   id = models.AutoField(primary_key=True)
   email = models.EmailField(null=False, max_length=255,unique=True)
   full_name = models.CharField(null=False, max_length=100)
-  date_of_birth = models.DateTimeField()
+  date_of_birth = models.DateField()
   account_type = models.CharField(null=False, max_length=50)
 
   is_admin = models.BooleanField(default = False)
@@ -62,4 +62,34 @@ class User(AbstractBaseUser,PermissionsMixin):
 
   def has_module_perms(self, app_label):
       return True
+  
 
+
+class Librarian(models.Model):
+  """
+  Additional data to be stored for the Librarian User.
+  """
+  account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
+  joined_data = models.DateField()
+
+
+class Member(models.Model):
+  """
+  Additional data to be stored for the library members.
+  """
+  account = models.OneToOneField(User, on_delete=models.CASCADE, related_name="account")
+  membership_date = models.DateField(auto_now=True)
+  debt_amount = models.IntegerField(default=0)
+
+  def isDebtOutstanding(self):
+      """
+      Check if the debt amount of the library member is not greater than Rs. 500.
+
+      Returns:
+          bool: True if the debt amount is greater than or equal to Rs. 500, False otherwise.
+      """
+      if self.debt_amount >= 500:
+          return True
+      return False
+
+     
