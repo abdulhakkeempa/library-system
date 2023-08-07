@@ -70,7 +70,7 @@ class Librarian(models.Model):
   Additional data to be stored for the Librarian User.
   """
   account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
-  joined_data = models.DateField()
+  joined_date = models.DateField()
 
 
 class Member(models.Model):
