@@ -4,8 +4,9 @@ from .forms import LibraryMemberForm
 from .models import User, Member
 from django.db import IntegrityError
 from django.http import JsonResponse
+from django.contrib.auth.decorators import user_passes_test
 
-
+@user_passes_test(lambda user: user.is_superuser)
 def getMembers(request):
     """
         HTTP Request for fetching all the member instances from the database.
@@ -22,6 +23,7 @@ def getMembers(request):
     context['members'] = members
     return render(request, template_name, context)
 
+@user_passes_test(lambda user: user.is_superuser)
 def createMember(request):
     """
         HTTP Request for creating an instance of the Library Member in to the databse.
@@ -48,7 +50,7 @@ def createMember(request):
 
     return redirect("library-members", success=True)
 
-
+@user_passes_test(lambda user: user.is_superuser)
 def updateMember(request, pk):
     """"
         HTTP Request for updating an instance of the given primary key along with the url.
@@ -79,7 +81,7 @@ def updateMember(request, pk):
     message['message'] = error_message
     return JsonResponse(message)
 
-
+@user_passes_test(lambda user: user.is_superuser)
 def deleteMember(request, pk):
     """"
         HTTP Request for deleting an instance of the given primary key along with the url.
