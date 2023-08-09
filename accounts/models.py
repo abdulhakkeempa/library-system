@@ -7,24 +7,26 @@ class UserManager(BaseUserManager):
   """
   Custom Django User Manager for the Custom User Model Created.
   """
-  def create_user(self, email, full_name, password=None, **kwargs):
+  def create_user(self, email, full_name, dob,password=None, **kwargs):
       if not email:
           raise ValueError("Email not provided")
 
       user = self.model(
           email = self.normalize_email(email),
           full_name = full_name,
+          date_of_birth = dob,
           **kwargs
       )
       user.set_password(password) #hashing and storing the password
       user.save(using = self._db) #saving the user with the database.
       return user
 
-  def create_superuser(self, email, full_name, password=None, **kwargs):
+  def create_superuser(self, email, full_name, dob,password=None, **kwargs):
       user = self.create_user(
           email=email,
           password=password,
           full_name = full_name,
+          date_of_birth = dob,
           **kwargs
       )
       user.is_admin = True
@@ -41,8 +43,8 @@ class User(AbstractBaseUser,PermissionsMixin):
   id = models.AutoField(primary_key=True)
   email = models.EmailField(null=False, max_length=255,unique=True)
   full_name = models.CharField(null=False, max_length=100)
-  date_of_birth = models.DateField()
-  account_type = models.CharField(null=False, max_length=50)
+  date_of_birth = models.DateField(null=False)
+  account_type = models.CharField(default="Library-Member" ,null=False, max_length=50)
 
   is_admin = models.BooleanField(default = False)
   is_active = models.BooleanField(default = True)
@@ -70,7 +72,7 @@ class Librarian(models.Model):
   Additional data to be stored for the Librarian User.
   """
   account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
-  joined_date = models.DateField()
+  joined_date = models.DateField(null=True)
 
 
 class Member(models.Model):
