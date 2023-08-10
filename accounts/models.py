@@ -71,7 +71,7 @@ class Librarian(models.Model):
   """
   Additional data to be stored for the Librarian User.
   """
-  account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
+  account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='librarian')
   joined_date = models.DateField(null=True)
 
 
@@ -79,7 +79,7 @@ class Member(models.Model):
   """
   Additional data to be stored for the library members.
   """
-  account = models.OneToOneField(User, on_delete=models.CASCADE, related_name="account")
+  account = models.OneToOneField(User, on_delete=models.CASCADE, related_name="libary_members")
   membership_date = models.DateField(auto_now=True)
   debt_amount = models.IntegerField(default=0)
 
